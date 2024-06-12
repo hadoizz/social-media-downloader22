@@ -74,7 +74,12 @@ export default function Home() {
 
         <div className="flex justify-center space-x-3">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
-            <a key={index} href={media.url} download className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600">
+            <a 
+              key={index} 
+              href={media.url} 
+              download={`video-${index}.mp4`} // Added the download attribute
+              className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
+            >
               Download {media.quality}
             </a>
           ))}
