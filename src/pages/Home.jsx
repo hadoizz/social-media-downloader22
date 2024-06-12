@@ -4,7 +4,7 @@ import Form from '../components/Form'
 import axios from 'axios'
 
 export default function Home() {
-  const [mediaData, setMediaData] = useState();
+  const [mediaData, setMediaData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const downloadMedia = async (e) => {
@@ -29,6 +29,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.request(options);
+      console.log(response.data); // Log the response data to understand its structure
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
@@ -51,22 +52,22 @@ export default function Home() {
         )}
         
         <div className="flex justify-center">
-          {mediaData && (
+          {mediaData && mediaData.url && (
             <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
-              <source src={mediaData?.url} type="video/mp4" />
+              <source src={mediaData.url} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           )}
         </div>
 
         <div className="flex justify-center">
-          {mediaData && (
-            <h2 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">{mediaData?.title}</h2>
+          {mediaData && mediaData.title && (
+            <h2 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">{mediaData.title}</h2>
           )}
         </div>
 
         <div className="flex justify-center space-x-3">
-          {mediaData && mediaData.links.map((link, index) => (
+          {mediaData && mediaData.links && mediaData.links.map((link, index) => (
             <a key={index} href={link.url} download className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600">Download {link.quality}</a>
           ))}
         </div>
