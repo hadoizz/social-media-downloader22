@@ -38,6 +38,17 @@ export default function Home() {
     }
   };
 
+  const handleDownload = (url, fileName) => {
+    const anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = fileName;
+    anchorElement.target = "_blank"; // Optional: Open download in new tab
+    anchorElement.style.display = 'none';
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+    document.body.removeChild(anchorElement);
+  };
+
   return (
     <Layout>
       <div className="text-center py-2 space-y-2 m-2">
@@ -74,14 +85,13 @@ export default function Home() {
 
         <div className="flex justify-center space-x-3">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
-            <a 
+            <button 
               key={index} 
-              href={media.url} 
-              download={`video-${index}.mp4`}
+              onClick={() => handleDownload(media.url, `video-${index}.mp4`)}
               className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
             >
               Download {media.quality}
-            </a>
+            </button>
           ))}
         </div>
       </div>
