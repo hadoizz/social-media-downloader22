@@ -38,15 +38,31 @@ export default function Home() {
     }
   };
 
-  const handleDownload = (url, fileName) => {
-    const anchorElement = document.createElement('a');
-    anchorElement.href = url;
-    anchorElement.download = fileName;
-    anchorElement.target = "_blank"; // Optional: Open download in new tab
-    anchorElement.style.display = 'none';
-    document.body.appendChild(anchorElement);
-    anchorElement.click();
-    document.body.removeChild(anchorElement);
+  const handleDownload = async (url, fileName) => {
+    try {
+      const response = await axios.get(url, {
+        responseType: 'blob', // Important: Response type as blob
+      });
+
+      // Create a temporary URL to the blob object
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create an anchor element
+      const anchorElement = document.createElement('a');
+      anchorElement.href = blobUrl;
+      anchorElement.download = fileName;
+      anchorElement.style.display = 'none';
+      document.body.appendChild(anchorElement);
+      anchorElement.click();
+      document.body.removeChild(anchorElement);
+
+      // Clean up the temporary URL created for the blob
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+      // Handle error (e.g., show a message to the user)
+    }
   };
 
   return (
