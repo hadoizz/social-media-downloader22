@@ -17,12 +17,6 @@ export default function Home() {
       return;
     }
 
-    // verify if the url is valid for facebook video, youtube video, instagram video, tiktok video
-    if (!mediaUrl.includes('facebook') && !mediaUrl.includes('youtube') && !mediaUrl.includes('instagram') && !mediaUrl.includes('tiktok')) {
-      alert('Please enter a valid url for facebook, youtube, instagram, tiktok');
-      return;
-    }
-
     const options = {
       method: 'GET',
       url: 'https://tweakball.com/wp-json/aio-dl/api/',
