@@ -38,14 +38,6 @@ export default function Home() {
     }
   };
 
-  const handleDownload = (url, fileName) => {
-    // Create an anchor element
-    const anchorElement = document.createElement('a');
-    anchorElement.href = url;
-    anchorElement.download = fileName;
-    anchorElement.click(); // Simulate a click on the anchor element to trigger download
-  };
-
   return (
     <Layout>
       <div className="text-center py-2 space-y-2 m-2">
@@ -82,13 +74,14 @@ export default function Home() {
 
         <div className="flex justify-center space-x-3">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
-            <button 
+            <a 
               key={index} 
-              onClick={() => handleDownload(media.url, `video-${index}.mp4`)}
+              href={media.url} 
+              download={`video-${index}.mp4`}
               className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
             >
               Download {media.quality}
-            </button>
+            </a>
           ))}
         </div>
       </div>
