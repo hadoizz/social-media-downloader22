@@ -9,19 +9,21 @@ export default function Home() {
 
   const downloadMedia = async (e) => {
     e.preventDefault();
-    const mediaUrl = e.target.mediaUrl.value;
+    const mediaUrl = e.target.mediaUrl.value.trim(); // Remove extra spaces
 
-    // Verify if the url is empty
+    // Verify if the URL is empty
     if (!mediaUrl) {
-      alert('Please enter a valid url');
+      alert('Please enter a valid URL');
       return;
     }
+
+    const encodedUrl = encodeURIComponent(mediaUrl);
 
     const options = {
       method: 'GET',
       url: 'https://tweakball.com/wp-json/aio-dl/api/',
       params: {
-        url: mediaUrl,
+        url: encodedUrl,
         key: '4355'
       }
     };
