@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white text-center p-4">
+    <footer className="bg-black text-white text-center p-4">
       <p className="text-sm">Made with ❤️ by 
-      <a href="https://tweakdoor.com" className="text-blue-500"> Tweakdoor.com</a>
+        <a href="https://tweakdoor.com" className="text-yellow-500 ml-1">Tweakdoor.com</a>
       </p>
     </footer>
-  )
+  );
 }
