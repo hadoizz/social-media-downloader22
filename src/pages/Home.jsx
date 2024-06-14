@@ -9,11 +9,11 @@ export default function Home() {
 
   const downloadMedia = async (e) => {
     e.preventDefault();
-    const mediaUrl = e.target.mediaUrl.value.trim(); // Remove extra spaces
+    const mediaUrl = e.target.mediaUrl.value;
 
-    // Verify if the URL is empty
+    // Verify if the url is empty
     if (!mediaUrl) {
-      alert('Please enter a valid URL');
+      alert('Please enter a valid url');
       return;
     }
 
