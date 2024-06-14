@@ -11,7 +11,6 @@ export default function Home() {
     e.preventDefault();
     const mediaUrl = e.target.mediaUrl.value;
 
-    // Verify if the url is empty
     if (!mediaUrl) {
       alert('Please enter a valid url');
       return;
@@ -29,7 +28,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data); // Log the response data to understand its structure
+      console.log(response.data);
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
@@ -41,14 +40,12 @@ export default function Home() {
   const handleDownload = async (url, fileName) => {
     try {
       const response = await axios.get(url, {
-        responseType: 'blob', // Important: Response type as blob
+        responseType: 'blob',
       });
 
-      // Create a temporary URL to the blob object
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
       const blobUrl = URL.createObjectURL(blob);
 
-      // Create an anchor element
       const anchorElement = document.createElement('a');
       anchorElement.href = blobUrl;
       anchorElement.download = fileName;
@@ -57,18 +54,16 @@ export default function Home() {
       anchorElement.click();
       document.body.removeChild(anchorElement);
 
-      // Clean up the temporary URL created for the blob
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Error downloading the file:', error);
-      // Handle error (e.g., show a message to the user)
     }
   };
 
   return (
     <Layout>
-      <div className="text-center py-2 space-y-2 m-2">
-        <h1 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
+      <div className="text-center py-2 space-y-2 m-2 bg-black min-h-screen">
+        <h1 className="text-2xl md:text-4xl capitalize text-center font-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
           Free Downloader from Facebook, Youtube, Instagram, Tiktok.
         </h1>
         <p className="text-sm md:text-lg text-center bg-gradient-to-r from-green-200 via-green-400 to-green-500 bg-clip-text text-transparent">
@@ -93,7 +88,7 @@ export default function Home() {
 
         <div className="flex justify-center">
           {mediaData && mediaData.title && (
-            <h2 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl md:text-4xl capitalize text-center font-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
               {mediaData.title}
             </h2>
           )}
@@ -104,7 +99,7 @@ export default function Home() {
             <button 
               key={index} 
               onClick={() => handleDownload(media.url, `video-${index}.mp4`)}
-              className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
+              className="bg-yellow-500 text-black p-2 rounded-md hover:bg-yellow-600 transition-colors duration-300"
             >
               Download {media.quality}
             </button>
