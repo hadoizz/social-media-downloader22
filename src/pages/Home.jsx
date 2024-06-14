@@ -17,13 +17,11 @@ export default function Home() {
       return;
     }
 
-    const encodedUrl = encodeURIComponent(mediaUrl);
-
     const options = {
       method: 'GET',
       url: 'https://tweakball.com/wp-json/aio-dl/api/',
       params: {
-        url: encodedUrl,
+        url: mediaUrl,
         key: '4355'
       }
     };
