@@ -82,7 +82,7 @@ export default function Home() {
           </div>
         )}
         
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center space-y-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
             <div key={index} className="mb-4">
               {media.type === 'video' && (
