@@ -16,13 +16,14 @@ export default function Home() {
       return;
     }
 
-    const options = {
-      method: 'GET',
-      url: 'https://your-backend-url.com/api/download',
-      params: {
-        url: mediaUrl,
-      }
-    };
+const options = {
+  method: 'GET',
+  url: 'https://tweakball.com/wp-json/aio-dl/api/',
+  params: {
+    url: mediaUrl,
+    key: '4355'
+  }
+};
 
     setLoading(true);
     try {
