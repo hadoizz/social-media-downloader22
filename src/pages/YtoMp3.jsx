@@ -25,7 +25,7 @@ export default function InstagramReels() {
         response_type: 'reels'
       },
       headers: {
-        'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+        'x-rapidapi-key': '61f99d3e77msh61688cbb09796b4p18b365jsn09c26ce3e5c4',
         'x-rapidapi-host': 'instagram-bulk-profile-scrapper.p.rapidapi.com'
       }
     };
@@ -46,6 +46,33 @@ export default function InstagramReels() {
   const extractShortcodeFromUrl = (url) => {
     const match = url.match(/\/reel\/([^\/?#]+)/);
     return match ? match[1] : null;
+  };
+
+  const handleDownload = async (url, fileName) => {
+    try {
+      const response = await axios.get(url, {
+        responseType: 'blob', // Important: Response type as blob
+      });
+
+      // Create a temporary URL to the blob object
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create an anchor element
+      const anchorElement = document.createElement('a');
+      anchorElement.href = blobUrl;
+      anchorElement.download = fileName;
+      anchorElement.style.display = 'none';
+      document.body.appendChild(anchorElement);
+      anchorElement.click();
+      document.body.removeChild(anchorElement);
+
+      // Clean up the temporary URL created for the blob
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+      // Handle error (e.g., show a message to the user)
+    }
   };
 
   return (
