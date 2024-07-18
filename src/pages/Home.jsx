@@ -16,19 +16,19 @@ export default function Home() {
       return;
     }
 
-const options = {
-  method: 'GET',
-  url: 'https://tweakball.com/wp-json/aio-dl/api/',
-  params: {
-    url: mediaUrl,
-    key: '4355'
-  }
-};
+    const options = {
+      method: 'GET',
+      url: 'https://tweakball.com/wp-json/aio-dl/api/',
+      params: {
+        url: mediaUrl,
+        key: '4355'
+      }
+    };
 
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data);
+      console.log('API Response:', response.data); // Log the response data
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
