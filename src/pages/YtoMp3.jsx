@@ -38,7 +38,7 @@ export default function Home() {
     try {
       const response = await axios.request(options);
       console.log('Response:', response.data); // Log the entire response object
-      setMediaData(response.data.candidates); // Assuming candidates is the array of results
+      setMediaData(response.data.items); // Set mediaData to response.data.items
       setLoading(false);
     } catch (error) {
       console.error('Error fetching media:', error);
