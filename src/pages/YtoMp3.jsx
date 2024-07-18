@@ -37,8 +37,8 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data); // Log the response data to understand its structure
-      setMediaData(response.data);
+      console.log('Response:', response.data); // Log the entire response object
+      setMediaData(response.data.candidates); // Assuming candidates is the array of results
       setLoading(false);
     } catch (error) {
       console.error('Error fetching media:', error);
@@ -87,7 +87,7 @@ export default function Home() {
         )}
 
         <div className="flex flex-wrap justify-center space-x-4">
-          {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
+          {mediaData && mediaData.length > 0 && mediaData.map((media, index) => (
             <div key={index} className="flex flex-col items-center my-4">
               <video controls className="w-full md:w-6/12 max-h-80 rounded-md mb-2">
                 <source src={media.url} type="video/mp4" />
