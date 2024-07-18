@@ -16,11 +16,16 @@ export default function Home() {
       return;
     }
 
+    // Extract shortcode from URL
+    const regex = /\/reel\/([A-Za-z0-9_-]+)\//;
+    const match = mediaUrl.match(regex);
+    const shortcode = match ? match[1] : '';
+
     const options = {
       method: 'GET',
       url: 'https://instagram-bulk-profile-scrapper.p.rapidapi.com/clients/api/ig/media_by_id',
       params: {
-        shortcode: 'C9iYZVANmyv', // Replace with your shortcode
+        shortcode: shortcode,
         response_type: 'reels'
       },
       headers: {
