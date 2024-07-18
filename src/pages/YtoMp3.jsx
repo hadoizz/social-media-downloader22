@@ -25,7 +25,7 @@ export default function InstagramReels() {
         response_type: 'reels'
       },
       headers: {
-        'x-rapidapi-key': '61f99d3e77msh61688cbb09796b4p18b365jsn09c26ce3e5c4',
+        'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
         'x-rapidapi-host': 'instagram-bulk-profile-scrapper.p.rapidapi.com'
       }
     };
