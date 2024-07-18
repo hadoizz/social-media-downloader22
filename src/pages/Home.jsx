@@ -20,7 +20,7 @@ export default function Home() {
       method: 'GET',
       url: 'https://tweakball.com/wp-json/aio-dl/api/',
       params: {
-        url: mediaUrl,
+        url: encodeURIComponent(mediaUrl), // Ensure URL is properly encoded
         key: '4355'
       }
     };
@@ -82,16 +82,16 @@ export default function Home() {
             <div key={index} className="mb-4">
               {media.type === 'video' && (
                 <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
-                  <source src={media.url} type="video/mp4" />
+                  <source src={decodeURIComponent(media.url)} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               )}
               {media.type === 'image' && (
-                <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
+                <img src={decodeURIComponent(media.url)} alt={media.title} className="max-w-full max-h-80 rounded-md" />
               )}
               {media.type === 'audio' && (
                 <audio controls className="w-full md:w-6/12">
-                  <source src={media.url} type="audio/mp3" />
+                  <source src={decodeURIComponent(media.url)} type="audio/mp3" />
                   Your browser does not support the audio tag.
                 </audio>
               )}
