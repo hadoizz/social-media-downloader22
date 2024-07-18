@@ -29,10 +29,10 @@ export default function Home() {
     try {
       const response = await axios.request(options);
       console.log('API Response:', response.data);
-      setMediaData(response.data);
+      setMediaData(response.data); // Assuming response.data is in the correct structure
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching media:', error);
       setLoading(false);
     }
   };
@@ -64,32 +64,39 @@ export default function Home() {
     <Layout>
       <div className="text-center py-2 space-y-2 m-2">
         <h1 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
-          Free Downloader from Facebook, Youtube, Instagram, Tiktok.
+          Free Downloader from Snapchat, Twitter, etc.
         </h1>
         <p className="text-sm md:text-lg text-center bg-gradient-to-r from-green-200 via-green-400 to-green-500 bg-clip-text text-transparent">
           Just paste the link and download the media you want.
         </p>
         <Form mediaDownload={downloadMedia} />
-        
+
         {loading && (
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-rose-700"></div>
           </div>
         )}
-        
+
         <div className="flex flex-col items-center space-y-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
             <div key={index} className="mb-4">
               {media.type === 'video' && (
-                <div className="mb-2">
-                  <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
-                    <source src={media.url} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
+                <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
+                  <source src={media.url} type={`video/${media.extension}`} />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+              {media.type === 'image' && (
+                <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
+              )}
+              {media.type === 'audio' && (
+                <audio controls className="w-full md:w-6/12">
+                  <source src={media.url} type={`audio/${media.extension}`} />
+                  Your browser does not support the audio tag.
+                </audio>
               )}
               <div className="flex justify-center mt-2">
-                <button 
+                <button
                   onClick={() => handleDownload(media.url, `media-${index}.${media.extension}`)}
                   className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
                 >
