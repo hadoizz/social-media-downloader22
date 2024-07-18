@@ -18,10 +18,9 @@ export default function Home() {
 
     const options = {
       method: 'GET',
-      url: 'https://tweakball.com/wp-json/aio-dl/api/',
+      url: 'https://your-backend-url.com/api/download',
       params: {
         url: mediaUrl,
-        key: '4355'
       }
     };
 
@@ -81,50 +80,28 @@ export default function Home() {
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
             <div key={index} className="mb-4">
               {media.type === 'video' && (
-                <div>
-                  <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
-                    <source src={media.url} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="flex justify-center mt-2">
-                    <button 
-                      onClick={() => handleDownload(media.url, `media-${index}.${media.extension}`)}
-                      className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
-                    >
-                      Download {media.quality}
-                    </button>
-                  </div>
-                </div>
+                <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
+                  <source src={media.url} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               )}
               {media.type === 'image' && (
-                <div>
-                  <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
-                  <div className="flex justify-center mt-2">
-                    <button 
-                      onClick={() => handleDownload(media.url, `media-${index}.${media.extension}`)}
-                      className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
-                    >
-                      Download {media.quality}
-                    </button>
-                  </div>
-                </div>
+                <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
               )}
               {media.type === 'audio' && (
-                <div>
-                  <audio controls className="w-full md:w-6/12">
-                    <source src={media.url} type="audio/mp3" />
-                    Your browser does not support the audio tag.
-                  </audio>
-                  <div className="flex justify-center mt-2">
-                    <button 
-                      onClick={() => handleDownload(media.url, `media-${index}.${media.extension}`)}
-                      className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
-                    >
-                      Download {media.quality}
-                    </button>
-                  </div>
-                </div>
+                <audio controls className="w-full md:w-6/12">
+                  <source src={media.url} type="audio/mp3" />
+                  Your browser does not support the audio tag.
+                </audio>
               )}
+              <div className="flex justify-center mt-2">
+                <button 
+                  onClick={() => handleDownload(media.url, `media-${index}.${media.extension}`)}
+                  className="bg-blue-500 text-white p-2 bg-gradient-to-r from-rose-700 to-pink-600"
+                >
+                  Download {media.quality}
+                </button>
+              </div>
             </div>
           ))}
         </div>
