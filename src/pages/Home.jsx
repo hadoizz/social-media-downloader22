@@ -80,16 +80,17 @@ export default function Home() {
         <div className="flex flex-col items-center space-y-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
             <div key={index} className="mb-4">
-              {media.type === 'video' && (
+              {console.log('Media Item:', media)} {/* Log each media item */}
+              {media.type === 'video' && media.url && (
                 <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
                   <source src={media.url} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               )}
-              {media.type === 'image' && (
+              {media.type === 'image' && media.url && (
                 <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
               )}
-              {media.type === 'audio' && (
+              {media.type === 'audio' && media.url && (
                 <audio controls className="w-full md:w-6/12">
                   <source src={media.url} type="audio/mp3" />
                   Your browser does not support the audio tag.
