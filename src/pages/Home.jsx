@@ -81,10 +81,12 @@ export default function Home() {
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
             <div key={index} className="mb-4">
               {media.type === 'video' && (
-                <video controls className="w-full md:w-6/12 max-h-80 rounded-md">
-                  <source src={media.url} type={`video/${media.extension}`} />
-                  Your browser does not support the video tag.
-                </video>
+                <div className="w-full md:w-6/12 max-h-80 rounded-md overflow-hidden">
+                  <video controls className="w-full">
+                    <source src={media.url} type={`video/${media.extension}`} />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               )}
               {media.type === 'image' && (
                 <img src={media.url} alt={media.title} className="max-w-full max-h-80 rounded-md" />
