@@ -9,8 +9,9 @@ export default function Home() {
 
   const downloadMedia = async (e) => {
     e.preventDefault();
-    const mediaUrl = e.target.mediaUrl.value.trim();
+    const mediaUrl = e.target.mediaUrl.value.trim(); // Remove extra spaces
 
+    // Verify if the URL is empty
     if (!mediaUrl) {
       alert('Please enter a valid URL');
       return;
@@ -18,16 +19,17 @@ export default function Home() {
 
     const options = {
       method: 'GET',
-      url: 'https://your-backend-url.com/api/download',
+      url: 'https://tweakball.com/wp-json/aio-dl/api/',
       params: {
         url: mediaUrl,
+        key: '4355'
       }
     };
 
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data);
+      console.log(response.data); // Log the response data to understand its structure
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
@@ -39,12 +41,14 @@ export default function Home() {
   const handleDownload = async (url, fileName) => {
     try {
       const response = await axios.get(url, {
-        responseType: 'blob',
+        responseType: 'blob', // Important: Response type as blob
       });
 
+      // Create a temporary URL to the blob object
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
       const blobUrl = URL.createObjectURL(blob);
 
+      // Create an anchor element
       const anchorElement = document.createElement('a');
       anchorElement.href = blobUrl;
       anchorElement.download = fileName;
@@ -53,9 +57,11 @@ export default function Home() {
       anchorElement.click();
       document.body.removeChild(anchorElement);
 
+      // Clean up the temporary URL created for the blob
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Error downloading the file:', error);
+      // Handle error (e.g., show a message to the user)
     }
   };
 
