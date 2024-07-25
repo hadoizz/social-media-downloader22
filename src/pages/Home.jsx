@@ -37,32 +37,28 @@ export default function Home() {
     }
   };
 
-const handleDownload = async (url, fileName) => {
-  try {
-    // Adjust the URL to point to your proxy
-    const proxyUrl = `https://media.storyclone.com/proxy?url=${encodeURIComponent(url)}`;
-    const response = await axios.get(proxyUrl, {
-      responseType: 'blob',
-    });
+  const handleDownload = async (url, fileName) => {
+    try {
+      const response = await axios.get(url, {
+        responseType: 'blob',
+      });
 
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
-    const blobUrl = URL.createObjectURL(blob);
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      const blobUrl = URL.createObjectURL(blob);
 
-    const anchorElement = document.createElement('a');
-    anchorElement.href = blobUrl;
-    anchorElement.download = fileName;
-    anchorElement.style.display = 'none';
-    document.body.appendChild(anchorElement);
-    anchorElement.click();
-    document.body.removeChild(anchorElement);
+      const anchorElement = document.createElement('a');
+      anchorElement.href = blobUrl;
+      anchorElement.download = fileName;
+      anchorElement.style.display = 'none';
+      document.body.appendChild(anchorElement);
+      anchorElement.click();
+      document.body.removeChild(anchorElement);
 
-    URL.revokeObjectURL(blobUrl);
-  } catch (error) {
-    console.error('Error downloading the file:', error);
-  }
-};
-
-
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
 
   return (
     <Layout>
