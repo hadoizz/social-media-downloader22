@@ -39,7 +39,7 @@ export default function Home() {
 
   const handleDownload = async (url, fileName) => {
   try {
-    const response = await axios.get(`http://localhost:3001/proxy?url=${encodeURIComponent(url)}`, {
+    const response = await axios.get(`/api/proxy?url=${encodeURIComponent(url)}`, {
       responseType: 'blob',
     });
 
