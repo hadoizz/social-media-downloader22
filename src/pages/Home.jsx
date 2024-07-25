@@ -62,7 +62,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="bg-custom-green text-center py-2 space-y-2 m-2">
+      <div className="bg-gray-100 text-center py-2 space-y-2 m-2">
         <h1 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
           Free Downloader from Facebook, Youtube, Instagram, Tiktok.
         </h1>
