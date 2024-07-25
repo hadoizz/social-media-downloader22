@@ -62,7 +62,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="text-center py-2 space-y-2 m-2">
+      <div className="bg-custom-green text-center py-2 space-y-2 m-2">
         <h1 className="text-2xl md:text-4xl capitalize text-center text-bold bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
           Free Downloader from Facebook, Youtube, Instagram, Tiktok.
         </h1>
@@ -79,7 +79,7 @@ export default function Home() {
 
         <div className="flex flex-wrap justify-center space-x-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
-            <div key={index} className="flex flex-col items-center my-4">
+            <div key={index} className="flex flex-col items-center my-4 bg-white p-4 rounded-md shadow-lg">
               <video controls className="w-full md:w-6/12 max-h-80 rounded-md mb-2">
                 <source src={media.url} type="video/mp4" />
                 Your browser does not support the video tag.
