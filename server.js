@@ -1,25 +1,33 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors');
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('/proxy', async (req, res) => {
-  const videoUrl = req.query.url;
+app.get('/api/proxy', async (req, res) => {
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).json({ error: 'URL parameter is required' });
+  }
 
   try {
-    const response = await axios.get(videoUrl, { responseType: 'arraybuffer' });
-    res.set('Content-Type', response.headers['content-type']);
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    res.setHeader('Content-Type', response.headers['content-type']);
     res.send(response.data);
   } catch (error) {
     console.error('Error fetching the video:', error);
-    res.status(500).send('Error fetching the video');
+    res.status(500).json({ error: 'Error fetching the video' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Proxy server running on port ${PORT}`);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
