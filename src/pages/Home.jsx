@@ -37,8 +37,9 @@ export default function Home() {
     }
   };
 
-  const handleDownload = async (url, fileName) => {
+const handleDownload = async (url, fileName) => {
   try {
+    // Adjust the URL to point to your proxy
     const proxyUrl = `https://media.storyclone.com/proxy?url=${encodeURIComponent(url)}`;
     const response = await axios.get(proxyUrl, {
       responseType: 'blob',
@@ -60,6 +61,7 @@ export default function Home() {
     console.error('Error downloading the file:', error);
   }
 };
+
 
 
   return (
