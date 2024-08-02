@@ -6,6 +6,11 @@ const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY?.replace(/\\n/g, '\n');
 const BUCKET_NAME = process.env.BUCKET_NAME || 'your-default-bucket-name';
 
+console.log('PROJECT_ID:', PROJECT_ID);
+console.log('CLIENT_EMAIL:', CLIENT_EMAIL);
+console.log('PRIVATE_KEY:', PRIVATE_KEY ? 'Exists' : 'Missing');
+console.log('BUCKET_NAME:', BUCKET_NAME);
+
 if (!PROJECT_ID || !CLIENT_EMAIL || !PRIVATE_KEY) {
   throw new Error('Missing required environment variables');
 }
@@ -31,7 +36,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(decodeURIComponent(url));
 
     if (!response.ok) {
       throw new Error(`Failed to fetch video: ${response.statusText}`);
@@ -61,6 +66,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error proxying video:', error);
-    res.status(500).send(`Error proxying video: ${(error.message)}`);
+    res.status(500).send(`Error proxying video: ${error.message}`);
   }
 }
