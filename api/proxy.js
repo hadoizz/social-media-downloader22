@@ -1,33 +1,14 @@
-import React from 'react';
+// api/proxy.js
 import axios from 'axios';
 
-const MediaDownloader = ({ mediaUrl, fileName }) => {
-  const handleDownload = async () => {
-    try {
-      const response = await axios.get('/api/proxy', {
-        params: { url: mediaUrl },
-        responseType: 'blob',
-      });
+export default async function handler(req, res) {
+  const { url } = req.query;
 
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      const blobUrl = URL.createObjectURL(blob);
-
-      const anchor = document.createElement('a');
-      anchor.href = blobUrl;
-      anchor.download = fileName;
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-      
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-    }
-  };
-
-  return (
-    <button onClick={handleDownload}>Download</button>
-  );
-};
-
-export default MediaDownloader;
+  try {
+    const response = await axios.get(url, { responseType: 'stream' });
+    res.setHeader('Content-Type', response.headers['content-type']);
+    response.data.pipe(res);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching the resource', error: error.message });
+  }
+}
