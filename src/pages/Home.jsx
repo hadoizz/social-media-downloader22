@@ -6,8 +6,6 @@ import axios from 'axios';
 export default function Home() {
   const [mediaData, setMediaData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
 
   const downloadMedia = async (e) => {
     e.preventDefault();
@@ -30,7 +28,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data);
+      console.log(response.data); // Log the response data to understand its structure
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
@@ -62,51 +60,6 @@ export default function Home() {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const getSignedUrl = async (file) => {
-    try {
-      const response = await axios.post('/api/upload', {
-        fileName: file.name,
-        contentType: file.type,
-      });
-      return response.data.url;
-    } catch (error) {
-      console.error('Error getting signed URL:', error);
-      return null;
-    }
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file) return;
-
-    setUploading(true);
-
-    const signedUrl = await getSignedUrl(file);
-    if (!signedUrl) {
-      setUploading(false);
-      alert('Failed to get signed URL.');
-      return;
-    }
-
-    try {
-      await axios.put(signedUrl, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-      alert('File uploaded successfully!');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Error uploading file.');
-    } finally {
-      setUploading(false);
-    }
-  };
-
   return (
     <Layout>
       <div className="text-center py-2 space-y-2 m-2">
@@ -123,13 +76,6 @@ export default function Home() {
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-rose-700"></div>
           </div>
         )}
-
-        <form onSubmit={handleUpload} className="flex flex-col items-center my-4">
-          <input type="file" onChange={handleFileChange} />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md bg-gradient-to-r from-rose-700 to-pink-600" disabled={uploading}>
-            {uploading ? 'Uploading...' : 'Upload File'}
-          </button>
-        </form>
 
         <div className="flex flex-wrap justify-center space-x-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
