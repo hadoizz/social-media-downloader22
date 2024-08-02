@@ -1,22 +1,33 @@
-// api/proxy.js
+import React from 'react';
 import axios from 'axios';
 
-export default async function handler(req, res) {
-  const { url } = req.query;
+const MediaDownloader = ({ mediaUrl, fileName }) => {
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get('/api/proxy', {
+        params: { url: mediaUrl },
+        responseType: 'blob',
+      });
 
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required' });
-  }
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      const blobUrl = URL.createObjectURL(blob);
 
-  try {
-    const response = await axios.get(url, {
-      responseType: 'arraybuffer', // or 'blob' if you're dealing with large files
-    });
+      const anchor = document.createElement('a');
+      anchor.href = blobUrl;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
 
-    res.setHeader('Content-Type', response.headers['content-type']);
-    res.setHeader('Content-Length', response.headers['content-length']);
-    res.status(200).send(response.data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
+  return (
+    <button onClick={handleDownload}>Download</button>
+  );
+};
+
+export default MediaDownloader;
