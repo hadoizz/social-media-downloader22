@@ -1,66 +1,55 @@
-// src/app/page.tsx (or .jsx)
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import Form from '../components/Form';
 import axios from 'axios';
 
 export default function Home() {
-  const [mediaData, setMediaData] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
-
-  const downloadMedia = async (e) => {
-    e.preventDefault();
-    const mediaUrl = e.target.mediaUrl.value;
-
-    if (!mediaUrl) {
-      alert('Please enter a valid URL');
-      return;
-    }
-
-    const options = {
-      method: 'GET',
-      url: 'https://tweakball.com/wp-json/aio-dl/api/',
-      params: {
-        url: mediaUrl,
-        key: '4355'
-      }
-    };
-
-    setLoading(true);
-    try {
-      const response = await axios.request(options);
-      console.log(response.data); // Log the response data to understand its structure
-      setMediaData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching media:', error);
-      setLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
+  const [uploadUrl, setUploadUrl] = useState(null);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const getSignedUrl = async (file) => {
+    try {
+      const response = await axios.post('/api/upload', {
+        fileName: file.name,
+        contentType: file.type,
+      });
+      return response.data.url;
+    } catch (error) {
+      console.error('Error getting signed URL:', error);
+      return null;
+    }
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
+    setLoading(true);
+
+    const signedUrl = await getSignedUrl(file);
+    if (!signedUrl) {
+      setLoading(false);
+      alert('Failed to get signed URL.');
+      return;
+    }
 
     try {
-      const response = await axios.post('/api/upload', formData, {
+      await axios.put(signedUrl, file, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': file.type,
         },
       });
-      console.log(response.data);
       alert('File uploaded successfully!');
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Error uploading file.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,25 +77,7 @@ export default function Home() {
           </button>
         </form>
 
-        <div className="flex flex-wrap justify-center space-x-4">
-          {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
-            <div key={index} className="flex flex-col items-center my-4">
-              <video controls className="w-full md:w-6/12 max-h-80 rounded-md mb-2">
-                <source src={media.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <p className="text-sm md:text-lg">{media.title}</p>
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => handleDownload(media.url, `video-${index}.mp4`)}
-                  className="bg-blue-500 text-white p-2 rounded-md bg-gradient-to-r from-rose-700 to-pink-600"
-                >
-                  Download {media.quality}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Your other UI elements */}
       </div>
     </Layout>
   );
