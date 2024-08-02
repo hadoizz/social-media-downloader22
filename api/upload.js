@@ -1,29 +1,30 @@
+// pages/api/generateSignedUrl.js
 import { Storage } from '@google-cloud/storage';
 
-const storage = new Storage({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-  credentials: {
-    client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  },
-});
-
-const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME);
+const storage = new Storage();
+const bucketName = process.env.GOOGLE_CLOUD_BUCKET_NAME;
+const bucket = storage.bucket(bucketName);
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    try {
-      const file = req.files.file; // Assume file is sent in form-data
-      const blob = bucket.file(file.name);
-      const blobStream = blob.createWriteStream();
+    const { fileName, contentType } = req.body;
 
-      blobStream.on('finish', () => {
-        res.status(200).json({ message: 'File uploaded successfully!' });
-      }).on('error', (err) => {
-        res.status(500).json({ error: err.message });
-      }).end(file.data);
+    if (!fileName || !contentType) {
+      return res.status(400).json({ error: 'File name and content type are required.' });
+    }
+
+    const options = {
+      version: 'v4',
+      action: 'write',
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+      contentType: contentType,
+    };
+
+    try {
+      const [url] = await bucket.file(fileName).getSignedUrl(options);
+      res.status(200).json({ url });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to upload file' });
+      res.status(500).json({ error: 'Error generating signed URL.' });
     }
   } else {
     res.setHeader('Allow', ['POST']);
