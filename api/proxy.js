@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import fetch from 'node-fetch';
-import { Storage } from '@google-cloud/storage';
+const fetch = require('node-fetch');
+const { Storage } = require('@google-cloud/storage');
 
 const PROJECT_ID = process.env.PROJECT_ID;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
@@ -19,11 +18,11 @@ const storage = new Storage({
   },
 });
 
-function generateUniqueFileName(): string {
+function generateUniqueFileName() {
   return `${Date.now()}-${Math.floor(Math.random() * 10000)}.mp4`;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+module.exports = async function handler(req, res) {
   const { url } = req.query;
 
   if (!url || typeof url !== 'string') {
@@ -32,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Fetch the video from the provided URL
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -43,7 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const fileName = generateUniqueFileName();
     const file = storage.bucket(BUCKET_NAME).file(fileName);
 
-    // Pipe the response to a file in Google Cloud Storage
     const writeStream = file.createWriteStream({
       metadata: {
         contentType,
@@ -53,7 +50,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     response.body.pipe(writeStream);
 
     writeStream.on('finish', () => {
-      // Once the file is uploaded, respond with the public URL
       const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${fileName}`;
       res.status(200).json({ url: publicUrl });
     });
@@ -65,6 +61,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } catch (error) {
     console.error('Error proxying video:', error);
-    res.status(500).send(`Error proxying video: ${(error as Error).message}`);
+    res.status(500).send(`Error proxying video: ${(error.message)}`);
   }
-}
+};
