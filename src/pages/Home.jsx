@@ -1,3 +1,4 @@
+// src/app/page.tsx (or .jsx)
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import Form from '../components/Form';
@@ -6,6 +7,7 @@ import axios from 'axios';
 export default function Home() {
   const [mediaData, setMediaData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   const downloadMedia = async (e) => {
     e.preventDefault();
@@ -37,31 +39,30 @@ export default function Home() {
     }
   };
 
-  // Example in Home.jsx
-const handleDownload = async (url, fileName) => {
-  try {
-    const response = await axios.get(`/api/proxy`, {
-      params: { url },
-      responseType: 'blob',
-    });
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
-    const blobUrl = URL.createObjectURL(blob);
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file) return;
 
-    const anchorElement = document.createElement('a');
-    anchorElement.href = blobUrl;
-    anchorElement.download = fileName;
-    anchorElement.style.display = 'none';
-    document.body.appendChild(anchorElement);
-    anchorElement.click();
-    document.body.removeChild(anchorElement);
+    const formData = new FormData();
+    formData.append('file', file);
 
-    URL.revokeObjectURL(blobUrl);
-  } catch (error) {
-    console.error('Error downloading the file:', error);
-  }
-};
-
+    try {
+      const response = await axios.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+      alert('File uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file.');
+    }
+  };
 
   return (
     <Layout>
@@ -79,6 +80,13 @@ const handleDownload = async (url, fileName) => {
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-rose-700"></div>
           </div>
         )}
+
+        <form onSubmit={handleUpload} className="flex flex-col items-center my-4">
+          <input type="file" onChange={handleFileChange} />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md bg-gradient-to-r from-rose-700 to-pink-600">
+            Upload File
+          </button>
+        </form>
 
         <div className="flex flex-wrap justify-center space-x-4">
           {mediaData && mediaData.medias && mediaData.medias.map((media, index) => (
