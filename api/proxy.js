@@ -5,7 +5,7 @@ import { Storage } from '@google-cloud/storage';
 const PROJECT_ID = process.env.PROJECT_ID;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY?.replace(/\\n/g, '\n');
-const BUCKET_NAME = process.env.BUCKET_NAME || 'your-default-bucket-name'; // Provide a default value here
+const BUCKET_NAME = process.env.BUCKET_NAME || 'your-default-bucket-name';
 
 if (!PROJECT_ID || !CLIENT_EMAIL || !PRIVATE_KEY) {
   throw new Error('Missing required environment variables');
@@ -54,10 +54,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       stream?.on('error', reject);
     });
 
+    // Set the response headers to allow cross-origin requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
     const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${fileName}`;
 
-    // Redirect to the public URL of the video
-    res.redirect(publicUrl);
+    // Return the URL where the file can be accessed
+    res.status(200).json({ url: publicUrl });
   } catch (error) {
     console.error('Error proxying video:', error);
     res.status(500).send(`Error proxying video: ${(error as Error).message}`);
