@@ -1,10 +1,10 @@
-const fetch = require('node-fetch');
-const { Storage } = require('@google-cloud/storage');
+import fetch from 'node-fetch';
+import { Storage } from '@google-cloud/storage';
 
 const PROJECT_ID = process.env.PROJECT_ID;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY?.replace(/\\n/g, '\n');
-const BUCKET_NAME = process.env.BUCKET_NAME || 'your-default-bucket-name'; // Provide a default value here
+const BUCKET_NAME = process.env.BUCKET_NAME || 'your-default-bucket-name';
 
 if (!PROJECT_ID || !CLIENT_EMAIL || !PRIVATE_KEY) {
   throw new Error('Missing required environment variables');
@@ -22,7 +22,7 @@ function generateUniqueFileName() {
   return `${Date.now()}-${Math.floor(Math.random() * 10000)}.mp4`;
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   const { url } = req.query;
 
   if (!url || typeof url !== 'string') {
@@ -63,4 +63,4 @@ module.exports = async function handler(req, res) {
     console.error('Error proxying video:', error);
     res.status(500).send(`Error proxying video: ${(error.message)}`);
   }
-};
+}
