@@ -6,8 +6,8 @@ import axios from 'axios';
 export default function Home() {
   const [mediaData, setMediaData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null); // State to hold the selected file
-  const [uploading, setUploading] = useState(false); // State to manage upload status
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const downloadMedia = async (e) => {
     e.preventDefault();
@@ -30,7 +30,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.request(options);
-      console.log(response.data); // Log the response data to understand its structure
+      console.log(response.data);
       setMediaData(response.data);
       setLoading(false);
     } catch (error) {
@@ -62,15 +62,13 @@ export default function Home() {
     }
   };
 
-  // Handle file selection
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Get signed URL for uploading
   const getSignedUrl = async (file) => {
     try {
-      const response = await axios.post('/api/generateSignedUrl', {
+      const response = await axios.post('/api/upload', {
         fileName: file.name,
         contentType: file.type,
       });
@@ -81,7 +79,6 @@ export default function Home() {
     }
   };
 
-  // Handle file upload
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
