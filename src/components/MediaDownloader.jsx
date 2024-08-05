@@ -10,7 +10,6 @@ const MediaDownloader = ({ mediaUrl, fileName }) => {
         responseType: 'json', // Expect JSON response containing the download URL
       });
 
-      // Ensure the response contains a valid URL
       const downloadUrl = response.data.url;
       if (!downloadUrl) {
         throw new Error('Failed to get download URL');
@@ -36,6 +35,7 @@ const MediaDownloader = ({ mediaUrl, fileName }) => {
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Error downloading file:', error);
+      alert('Failed to download file. Please try again.');
     }
   };
 
