@@ -35,7 +35,6 @@ const MediaDownloader = ({ mediaUrl, fileName }) => {
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Error downloading file:', error);
-      alert(`Failed to download file: ${error.message}`);
     }
   };
 
