@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import Form from '../components/Form';
-import MediaDownloader from '../components/MediaDownloader'; // Import the MediaDownloader component
 import axios from 'axios';
 
 export default function Home() {
@@ -38,6 +37,15 @@ export default function Home() {
     }
   };
 
+  const handleDownload = (url, index) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `video-${index}.mp4`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Layout>
       <div className="text-center py-2 space-y-2 m-2">
@@ -64,10 +72,12 @@ export default function Home() {
               </video>
               <p className="text-sm md:text-lg">{media.title}</p>
               <div className="flex space-x-3">
-                <MediaDownloader
-                  mediaUrl={media.url} // Pass the media URL
-                  fileName={`video-${index}.mp4`} // Set the file name
-                />
+                <button
+                  onClick={() => handleDownload(media.url, index)}
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                >
+                  Download
+                </button>
               </div>
             </div>
           ))}
