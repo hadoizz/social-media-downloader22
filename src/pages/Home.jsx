@@ -37,13 +37,19 @@ export default function Home() {
     }
   };
 
-  const handleDownload = (url, index) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `video-${index}.mp4`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (url, index) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `video-${index}.mp4`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading video:', error);
+    }
   };
 
   return (
